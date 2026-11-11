@@ -10,7 +10,7 @@ int main(void) {
     CitadelCommand command;
     CitadelResult result;
 
-    puts("Citadel 0.1.0 — offline assistant core. Type help or exit.");
+    puts("Citadel 0.1.0 - offline assistant core. Type help or exit.");
     if (citadel_registry_init(&registry) != CITADEL_OK ||
         citadel_demo_register(&registry) != CITADEL_OK) {
         fputs("Initialization failed.\n", stderr);
@@ -27,7 +27,8 @@ int main(void) {
         fflush(stdout);
         if (fgets(line, sizeof(line), stdin) == NULL) break;
         length = strlen(line);
-        if (length > 0 && line[length - 1] == '\n') line[--length] = 0;
+        if (length > 0 && (unsigned char)line[length - 1] == 10u)
+            line[--length] = 0;
         if (strcmp(line, "exit") == 0 || strcmp(line, "quit") == 0) break;
         if (citadel_parse(line, length, &command) != CITADEL_OK) {
             puts("Invalid or oversized command.");
