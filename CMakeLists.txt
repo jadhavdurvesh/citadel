@@ -10,7 +10,9 @@ add_library(citadel_core STATIC
     src/core/parser.c
     src/core/registry.c
     src/core/dispatcher.c
-    src/connectors/provider.c)
+    src/connectors/provider.c
+    src/connectors/octet.c
+    src/connectors/contract.c)
 target_include_directories(citadel_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 if(MSVC)
@@ -26,7 +28,8 @@ if(CITADEL_BUILD_TESTS)
   enable_testing()
   add_executable(citadel_tests
     tests/test_main.c tests/test_parser.c tests/test_registry.c
-    tests/test_dispatcher.c tests/test_provider.c)
+    tests/test_dispatcher.c tests/test_provider.c
+    tests/test_octet.c tests/test_contract.c)
   target_link_libraries(citadel_tests PRIVATE citadel_core)
   add_test(NAME citadel_tests COMMAND citadel_tests)
 endif()
