@@ -13,8 +13,9 @@ cmake --build build --parallel
 ctest --test-dir build --output-on-failure
 .\build\citadel.exe
 ```
-Commands: `help`, `status`, `system status`, `what time is it`, `what is the date`.
-Opening applications and changing settings are intentionally excluded. The
-bounded file-search API is implemented for host use and tests, but is not
-exposed as a command until the UI can require an explicit user-selected root.
-Search is limited to depth 8 and 16 results; POSIX symbolic links are not followed.
+Commands: `help`, `status`, `system status`, `capabilities list`,
+`what time is it`, `what is the date`, and `history`.
+The history is an in-memory ring of the last 10 commands and is discarded
+when Citadel exits. The file-search API remains available to host adapters
+but is not exposed as a command until an explicit user-selected root UI exists.
+Opening applications and modifying settings remain disabled.
