@@ -1,10 +1,19 @@
 #include "citadel/provider.h"
 #include <string.h>
-CitadelStatus citadel_provider_validate(const CitadelProviderV1 *p) {
- const CitadelProviderDescriptor *d;
- if (!p) return CITADEL_ERR_INVALID_ARGUMENT;
- d=&p->descriptor;
- if (d->abi_version!=CITADEL_PROVIDER_ABI_VERSION || d->struct_size<sizeof(*d)) return CITADEL_ERR_ABI_MISMATCH;
- if (!d->id[0] || !memchr(d->id,'\\0',sizeof(d->id)) || d->requires_network>1u || !p->generate) return CITADEL_ERR_INVALID_ARGUMENT;
- return CITADEL_OK;
+
+CitadelStatus citadel_provider_validate(const CitadelProviderV1 *provider) {
+    const CitadelProviderDescriptor *descriptor;
+    if (provider == NULL) return CITADEL_ERR_INVALID_ARGUMENT;
+    descriptor = &provider->descriptor;
+    if (descriptor->abi_version != CITADEL_PROVIDER_ABI_VERSION ||
+        descriptor->struct_size < sizeof(CitadelProviderDescriptor)) {
+        return CITADEL_ERR_ABI_MISMATCH;
+    }
+    if (descriptor->id[0] == '\0' ||
+        memchr(descriptor->id, 0, sizeof(descriptor->id)) == NULL ||
+        descriptor->requires_network > 1u ||
+        provider->generate == NULL) {
+        return CITADEL_ERR_INVALID_ARGUMENT;
+    }
+    return CITADEL_OK;
 }
