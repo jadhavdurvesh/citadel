@@ -1,26 +1,29 @@
-# M3 — Read-only host capabilities
+# M3 — host capabilities and interactive console
 
-This milestone expands the Windows/Linux/macOS test host without coupling the
-portable command core to an operating system.
+This milestone extends the portable C11 core with host-only, read-only
+capabilities and a small interactive console. The same command/runtime core
+is intended to be reusable by a future SandOS adapter.
 
-Implemented:
-- A bounded in-memory command history (last 10 commands; session-only).
-- A live capability inventory command.
-- System memory and logical CPU reporting.
-- Local date/time.
-- Bounded file-search API for trusted callers/tests (depth 8, 16 results).
-- Tests that verify the application-launch placeholder remains denied under
-  the normal read-system-only policy.
+## Commands
+- `help`, `status`
+- `system status`: physical memory totals/availability and logical CPU count
+- `what time is it`, `what is the date`: host local clock
+- `capabilities list`: disclose which capabilities are currently enabled
+- `history`: show the last ten commands in this process (volatile, not persisted)
 
-Deliberately not implemented:
-- Launching applications or opening settings.
-- Changing system settings.
-- Unrestricted recursive file-search commands.
-- Background services, network, models, or AI providers.
+## Host APIs
+`citadel_host_system_snapshot` exposes a read-only system snapshot.
+`citadel_host_search_files` provides bounded host-side filename search:
+maximum depth 8 and 16 matches. It is not yet exposed as a console command:
+the command/UI must first provide a clear user-selected root and safe path
+handling. Search does not read file contents or execute files.
 
-The capability inventory is generated from the registered runtime registry,
-not a hard-coded marketing list. It omits the intentionally disabled launcher
-and capabilities requiring permissions outside the host's read-only grant.
+## Explicitly deferred
+Application launching and settings modification remain disabled. The demo
+"open settings" intent is deliberately denied by the default host policy.
+No AI model, internet, network service, GPU, background worker or third-party
+runtime is required.
 
-History is volatile and is never written to disk. No user file contents are
-read by the assistant in this milestone.
+## CI
+GitHub Actions builds and runs tests on Ubuntu and Windows. Local Windows
+instructions are in `WINDOWS_TESTING.md`.
