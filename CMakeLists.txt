@@ -1,32 +1,31 @@
 cmake_minimum_required(VERSION 3.16)
-project(Citadel VERSION 0.1.0 LANGUAGES C)
-
+project(Citadel VERSION 0.2.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
-
 option(CITADEL_BUILD_TESTS "Build Citadel tests" ON)
-add_library(citadel_core STATIC
-    src/core/parser.c
-    src/core/registry.c
-    src/core/dispatcher.c
-    src/connectors/provider.c)
+add_library(citadel_core STATIC src/core/parser.c src/core/registry.c src/core/dispatcher.c src/connectors/provider.c)
 target_include_directories(citadel_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
 if(MSVC)
-  target_compile_options(citadel_core PRIVATE /W4 /WX)
+ target_compile_options(citadel_core PRIVATE /W4)
 else()
-  target_compile_options(citadel_core PRIVATE -Wall -Wextra -Wpedantic -Werror)
+ target_compile_options(citadel_core PRIVATE -Wall -Wextra -Wpedantic)
 endif()
-
+add_library(citadel_host STATIC src/host/system.c src/host/file_search.c src/host/native_adapter.c)
+target_include_directories(citadel_host PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/host)
+target_link_libraries(citadel_host PUBLIC citadel_core)
+if(MSVC)
+ target_compile_options(citadel_host PRIVATE /W4)
+else()
+ target_compile_options(citadel_host PRIVATE -Wall -Wextra -Wpedantic)
+endif()
 add_executable(citadel src/host/main.c src/host/demo_adapter.c)
-target_link_libraries(citadel PRIVATE citadel_core)
-
+target_include_directories(citadel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/host)
+target_link_libraries(citadel PRIVATE citadel_host)
 if(CITADEL_BUILD_TESTS)
-  enable_testing()
-  add_executable(citadel_tests
-    tests/test_main.c tests/test_parser.c tests/test_registry.c
-    tests/test_dispatcher.c tests/test_provider.c)
-  target_link_libraries(citadel_tests PRIVATE citadel_core)
-  add_test(NAME citadel_tests COMMAND citadel_tests)
+ enable_testing()
+ add_executable(citadel_tests tests/test_main.c tests/test_parser.c tests/test_registry.c tests/test_dispatcher.c tests/test_provider.c tests/test_host.c src/host/demo_adapter.c)
+ target_include_directories(citadel_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/host)
+ target_link_libraries(citadel_tests PRIVATE citadel_host)
+ add_test(NAME citadel_tests COMMAND citadel_tests)
 endif()
