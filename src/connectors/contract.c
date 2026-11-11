@@ -22,7 +22,6 @@ static CitadelStatus append(uint8_t *payload,size_t cap,size_t *offset,
 static CitadelStatus wrap(uint8_t type,const uint8_t *payload,size_t payload_len,
     uint8_t *out,size_t cap,size_t *written) {
     uint8_t framed[CITADEL_CONTRACT_WIRE_BYTES];
-    size_t n=0;
     if (payload_len+1u>sizeof(framed)) return CITADEL_ERR_LIMIT;
     framed[0]=type; if(payload_len) memcpy(framed+1,payload,payload_len);
     return map_octet(citadel_octet_encode(0,framed,payload_len+1u,out,cap,written));
