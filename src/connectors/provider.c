@@ -9,7 +9,7 @@ CitadelStatus citadel_provider_validate(const CitadelProviderV1 *provider) {
         descriptor->struct_size < sizeof(CitadelProviderDescriptor)) {
         return CITADEL_ERR_ABI_MISMATCH;
     }
-    if (descriptor->id[0] == '\0' ||
+    if (descriptor->id[0] == 0 ||
         memchr(descriptor->id, 0, sizeof(descriptor->id)) == NULL ||
         descriptor->requires_network > 1u ||
         provider->generate == NULL) {
