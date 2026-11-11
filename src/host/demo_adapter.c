@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 static CitadelStatus help(const CitadelCommand*c,CitadelResult*r,void*u){(void)c;(void)u;
- snprintf(r->text,sizeof(r->text),"Commands: help, status, system status, capabilities list, what time is it, what is the date, history, exit");return CITADEL_OK;}
+ snprintf(r->text,sizeof(r->text),"Commands: help, status, system status, capabilities list, apps, what time is it, what is the date, history, exit");return CITADEL_OK;}
 static CitadelStatus status(const CitadelCommand*c,CitadelResult*r,void*u){(void)c;(void)u;
  snprintf(r->text,sizeof(r->text),"Citadel core is running. Offline deterministic mode; AI and network connectors inactive.");return CITADEL_OK;}
 static CitadelStatus settings(const CitadelCommand*c,CitadelResult*r,void*u){(void)c;(void)u;
