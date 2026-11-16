@@ -10,7 +10,7 @@ Input is limited to 256 bytes; commands contain at most 16 tokens, each at most 
 
 ## Intent matching
 
-M1 uses deterministic phrase matching. It is not natural-language understanding. Optional classifiers may be added behind a separate interface in later versions.
+M1 uses deterministic phrase matching. A phrase may end in a standalone `*` token ("open *"), which matches one or more further tokens; the capability reads them from the command (`tokens[1..]`). `*` is rejected anywhere else in a phrase, and as a whole phrase. It is not natural-language understanding. Optional classifiers may be added behind a separate interface in later versions.
 
 ## Platform adapters
 

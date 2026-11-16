@@ -64,6 +64,8 @@ ARGUS and AETHER are verification/inspection tools, not always-running assistant
 
 ## Integration status and resource policy
 
+**SandOS adapter (M5):** portable assistant behaviour for SAND OS (open apps, list apps, time/uptime/status, settings with confirmation) behind a platform table; see [docs/SANDOS_ADAPTER.md](docs/SANDOS_ADAPTER.md).
+
 **Current M1 implementation:** the Citadel C11 core, deterministic intent registry, permission-gated dispatcher, CLI demonstration host, tests, and dormant provider ABI.
 
 **Not yet integrated into the M1 executable:** CONTRACT, OCTET, DATAGRAM, CALLGRAPH, ARGUS, ORBIT, PHANTOM, FROSTBYTE, AETHER, LEXORA, DMJScript, RELAY, and DMJ LLM. They are documented as concrete integration targets, not falsely represented as linked dependencies.

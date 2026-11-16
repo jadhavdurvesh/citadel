@@ -49,6 +49,23 @@ CitadelStatus citadel_register_intent(
     }
     while (length < CITADEL_MAX_TOKEN_LENGTH && phrase[length] != '\0') length++;
     if (length == 0 || length >= CITADEL_MAX_TOKEN_LENGTH) return CITADEL_ERR_LIMIT;
+    {   /* '*' is allowed only as a standalone, final token, and never as the whole phrase */
+        size_t i, token_start = 0, tokens = 0;
+        for (i = 0; i <= length; ++i) {
+            if (i == length || phrase[i] == ' ') {
+                if (i > token_start) {
+                    ++tokens;
+                    if (i - token_start == 1 && phrase[token_start] == '*') {
+                        size_t j; for (j = i; j < length; ++j) if (phrase[j] != ' ') return CITADEL_ERR_INVALID_ARGUMENT;
+                        if (tokens == 1) return CITADEL_ERR_INVALID_ARGUMENT;
+                    } else {
+                        size_t k; for (k = token_start; k < i; ++k) if (phrase[k] == '*') return CITADEL_ERR_INVALID_ARGUMENT;
+                    }
+                }
+                token_start = i + 1;
+            }
+        }
+    }
     if (registry->intent_count >= CITADEL_MAX_INTENTS) return CITADEL_ERR_LIMIT;
     for (i = 0; i < registry->intent_count; ++i) {
         if (strcmp(registry->intents[i].phrase, phrase) == 0 ||
