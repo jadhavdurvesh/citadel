@@ -40,6 +40,8 @@ CitadelStatus citadel_parse(const char *, size_t, CitadelCommand *);
 CitadelStatus citadel_registry_init(CitadelRegistry *);
 CitadelStatus citadel_register_capability(CitadelRegistry *, const CitadelCapability *, CitadelCapabilityFn, void *);
 CitadelStatus citadel_register_intent(CitadelRegistry *, const char *, const char *, const char *);
+/* 1 when the command matches an intent whose capability requires confirmation (nothing is executed), else 0. */
+int citadel_requires_confirmation(const CitadelRegistry *, const CitadelCommand *);
 CitadelStatus citadel_dispatch(const CitadelRegistry *, const CitadelCommand *, const CitadelPolicy *, CitadelResult *);
 #ifdef __cplusplus
 }
