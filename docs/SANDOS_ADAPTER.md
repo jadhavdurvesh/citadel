@@ -14,6 +14,9 @@ The adapter needs only `memcpy`/`memset`/`memcmp`/`strlen`/`strcmp`, so it links
 | `status`, `system status`, `uptime` | `sand.status` | READ_SYSTEM |
 | `settings`, `show settings` | `sand.show_settings` | READ_SYSTEM |
 | `set accent <name>`, `set motion on\|off`, `set clock 12\|24` | `sand.set` | MODIFY_SETTINGS **and confirmation** |
+| `note <text>` (≤60 chars), `notes` / `show notes` | `sand.note`, `sand.notes` | FILE_ACCESS |
+| `clear notes` | `sand.notes_clear` | FILE_ACCESS **and confirmation** |
+| `remind me in <n> <seconds\|minutes\|hours> [to <text>]` (up to 24 h), `reminders`, `clear reminders` | `sand.remind`, `sand.reminders`, `sand.reminders_clear` | SCHEDULE |
 
 Changing settings never runs on the first request: `citadel_dispatch` returns `CITADEL_ERR_DENIED` until the host
 sets `confirmation_granted`, and `citadel_requires_confirmation()` lets the host ask the user first without executing anything.
@@ -26,3 +29,9 @@ sets `confirmation_granted`, and `citadel_requires_confirmation()` lets the host
 - Matching is still exact phrase matching, not language understanding; input should be lower-cased by the host.
 - The clock is the machine's real-time clock, which SAND OS does not synchronise.
 - Tests use a fake platform; the real SAND OS binding is tested in the SAND OS repository under QEMU only.
+
+## Notes and reminders
+
+The adapter keeps no state. The host supplies `note_*` and `reminder_*` hooks in `CitadelSandPlatform`;
+a NULL hook makes the matching intents answer `ERR_UNAVAILABLE`. The host stores notes and decides how
+reminders fire when due (the core has no clock or timer of its own).
